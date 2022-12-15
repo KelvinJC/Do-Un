@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+{% if user.is_authenticated %}
+<div class="col-md-8">
+  <div class="row">
+    {% for item in items %}
+
+    <div class="col-md-4 mb-3">
+      <div class="card">
+        {% if item.is_done %}
+        <div class="card-header">
+          <p class="card-text headertext"><small class="text-muted">Created {{item.time_created|timesince}} ago</small>
+            <span class="badge bg-success donebadge" >Done</span>
+          </p>
+        </div>
+        <div class="card-body bodytext">
+          <h5 class="card-title" style="text-decoration: line-through;">{{item.activity}}
+          </h5>
+          <p class="card-text bodytext" style="text-decoration: line-through;">{{ item.description }}</p>
+          <p class="card-text bodytext"><small class="text-muted">Done {{item.time_done|timesince}} ago</small></p>
+          
+          {% if item.image %}
+          <div class="aspect-ratio-box"><img src="{{ item.image }}" class="card-img-bottom" alt="..."></div>
+          {% endif %}
+        </div>
+  
+        {% else %}
+        <div class="card-header">
+          <p class="card-text headertext"><small class="text-muted">Created {{item.time_created|timesince}} ago</small></p>
+        </div>
+        <div class="card-body bodytext">
+          <h5 class="card-title ">{{item.activity}}</h5>
+          <p class="card-text bodytext">{{ item.description }}</p>
+            <a href="{% url 'delete-item' item.id %}" class="btn btn-outline-secondary btn-sm buttons bodytext" style="float: right;">Done</a>
+            <a href="{% url 'update-item' item.id %}" class="btn btn-outline-primary btn-sm buttons bodytext"  >Update</a>
+        </div>
+        {% if item.image %}
+        <div class="aspect-ratio-box"><img src="{{item.image}}" class="card-img-bottom" alt="..."></div>
+        {% endif %}
+        {% endif %}
+      </div>
+    </div>
+    {% endfor %}
+
+  </div>
+</div>
+
+{% else %}
+
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <p>
+      <strong>Sorry! You must be logged in to add a ToDo item</strong><br><br>
+      Log in <a href="{% url 'login' %}">here</a> or <a href="{% url 'signup' %}">Sign up</a>
+    </p>
+  </div>
+  <div class="col-md-4">
+    <div class="card shadow">
+      <div class="card-header"><strong>Login</strong></div>
+      <div class="card-body">
+        <form action="{% url 'login' %}" method=POST>
+          {% csrf_token %}
+              <div class="mb-3">
+                <label for="InputUsername" class="form-label">Username</label>
+                <input type="text" class="form-control" name="username" aria-describedby="usernameHelp">
+              </div>
+              <div class="mb-3">
+                <label for="InputPassword1" class="form-label">Password</label>
+                <input type="password" class="form-control" name="password">
+              </div>
+              <button type="submit" class="btn btn-sm btn-primary">Submit</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<br><br><br> 
+{% endif%}
+
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+  
+    </div>
+    <div class="col-md-4">
+      <div class="card shadow signup-form">
+        <div class="card-header"><strong>Sign-Up</strong></div>
+        <div class="card-body">
+          
+          {% if form.errors %}
+          <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            <strong>Ahoy sailor!</strong> There was an error with your form..
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+          {% endif %}
+          <br>
+              <form action="{% url 'signup' %}" method=POST>
+                <div class="row">
+                  {% csrf_token %}
+                  {{ form.as_p }}
+                  <button type="submit" class="btn btn-primary">Sign up</button>
+                </div>
+              </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <br><br><br><br>
+  
+{% endblock %}
