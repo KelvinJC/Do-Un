@@ -1,8 +1,7 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponseRedirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.utils import timesince, timezone
+from django.utils import timezone
 from django.db.models import Q
 
 from .models import Item
