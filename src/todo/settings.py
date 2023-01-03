@@ -1,6 +1,9 @@
 import os
 from pathlib import Path
 from django.urls import reverse_lazy
+from datetime import date
+
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -9,14 +12,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get("SECRET_KEY")   # 'django-insecure-ga=!um8%8g5_$z#&*6&o8k@$tzvo#ewy#9yz0vs*w(r$cd_)#k'
+SECRET_KEY =  os.environ.get("SECRET_KEY")  # 'django-insecure-ga=!um8%8g5_$z#&*6&o8k@$tzvo#ewy#9yz0vs*w(r$cd_)#k' 
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = int(os.environ.get("DEBUG", default=0))
 
 # 'DJANGO_ALLOWED_HOSTS' should be a single string of hosts with a space between each.
 # For example: 'DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]'
-ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")
+ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", default="127.0.0.1").split(" ")
 
 
 # Application definition
@@ -144,7 +147,38 @@ MEDIA_ROOT = ''
 CSRF_TRUSTED_ORIGINS = ["http://127.0.0.1:1338", "http://127.0.0.1:1338"]
 
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '[DJANGO] %(levelname)s %(asctime)s %(module)s: %(message)s'
+        }
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        },
 
+        'logfile': {
+            'level': 'INFO',
+            'class': 'logging.handlers.TimedRotatingFileHandler',
+            'filename': f'./logs/{date.today()}.log',
+            'when': 'D', # specifies the interval
+            'interval': 1, # defaults to 1, only necessary for other values 
+            'backupCount': 0, # how many backup file to keep
+            'formatter': 'verbose',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console', 'logfile'],
+            'level': 'INFO',
+            'propagate': False, # for docker logs -f to push the django logs to console
+        },
+    },
+}
 
 
 

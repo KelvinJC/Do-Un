@@ -1,3 +1,5 @@
+
+import logging
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -6,6 +8,9 @@ from django.db.models import Q
 
 from .models import Item
 from .forms import ItemForm
+
+# Create logger object
+logger = logging.getLogger('django')
 
 
 # Create your views here.
@@ -19,6 +24,7 @@ def create_item(request):
                 item.user = request.user
                 item.save()
                 form = ItemForm()
+                logger.info(f'User {request.user} created item "{item.activity}" ')
                 messages.success(request, ("Success. You have a new to do on the list"))
                 return redirect('create-item')
             else:
